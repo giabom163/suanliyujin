@@ -15,21 +15,16 @@ textarea{width:100%;min-height:32rem;resize:vertical;border:1px solid #334357;bo
 <p><a href="./">返回《算力余烬》</a></p>
 <p>把下方提示词交给能操作浏览器、能在当前网页执行 JavaScript 的 AI。只有聊天功能的 AI 也能给出建议，你需要把观测发给它，并在 F12 控制台代为执行它给出的指令。</p>
 <p><button type="button" id="copy">复制测试提示词</button><span id="status" role="status"></span></p>
-<textarea id="prompt" aria-label="测试提示词" readonly>请在《算力余烬》网页版测试 AI 对局接口：
-https://suanli-yujin.pages.dev/
+<textarea id="prompt" aria-label="测试提示词" readonly>在《算力余烬》网页版验证 EmberAI 对局接口。正式入口
+https://giabom.online/
 
-1. 打开游戏，点「开始游戏」→「管理员观战（AI 调试）」→ 锁定运维小队 → 选择稽核员并开局。记录地图、四名运维员、稽核员和自选技能；做多局时轮换地图。保持游戏标签页运行。
-2. 在游戏标签页执行 window.EmberAI.getObservation()。status 为 active 才能下指令。idle 表示还没开局或已经结束，unavailable 表示当前不是管理员观战。
-3. 每次决策先重新读观测。运维任务从该角色的 options 中选一项，把该角色的 id 和选项的 choice 原样提交。例如：
-const obs = window.EmberAI.getObservation();
-const unit = obs.squad?.find(a => a.options.length > 0);
-if (unit) window.EmberAI.sendCommand({
-  actor: unit.id, action: "task", choice: unit.options[0].choice
-});
-上面用第一项演示格式，实际测试请根据状态重新选择：空手时取卡，持卡时找可安装节点，已有装卡节点时评估修复，队友需要救援时评估救援；以当前 options 为准。
-4. 运维员主动技能用 {actor: 运维员id, action: "skill"}。稽核员普攻用 {actor: "hunter", action: "attack"}，角色专属主动技能用 {actor: "hunter", action: "skill"}。普攻沿当前朝向，技能遵守冷却；接口未提供自由移动、瞄准或释放自选技能的指令。不要用内部引擎对象改状态或快进。
-5. ok:true 的任务指令只表示已分派。等画面推进，再读观测检查位置、节点、状态是否变化。ok:false 时记录 error，先刷新观测再决定下一步，避免反复重试同一条。
-6. 每局记录实际用了哪些指令、哪些成功及对应效果、结束原因、撤离人数、胜负和游戏内用时。有控制台错误时记录原文。只测试了单次指令时，请标明覆盖范围；读不到结算时请写「未观察到结算」。</textarea>
+1. 按真实流程开一局。「开始游戏」→「管理员观战 (AI调试)」→「锁定小队 · 进入稽核选人」→「确认稽核员并部署」。记下地图、四名运维员、稽核员和选定技能。多局时换图，保持游戏页运行。
+
+2. 每次下令前，在游戏页读取 window.EmberAI.getObservation()。只有 status 为 active 才下令。结合角色状态和当前 options 选择任务。空手时可选取卡，持卡时可选装卡，有装卡节点时可修复，队友被关时可救援。把该角色的 id 和选项的 choice 原样发给 window.EmberAI.sendCommand({actor: unit.id, action: "task", choice: option.choice})。没有可用选项就等画面推进再读。
+
+3. 运维主动技能用 {actor: unit.id, action: "skill"}，稽核普攻和专属主动分别用 {actor: "hunter", action: "attack"} 和 {actor: "hunter", action: "skill"}。等待合适的距离、朝向和冷却。只用公开接口，按正常对局速度观察。
+
+4. 分开记录指令回执和实际效果。ok:true 的任务回执表示已分派，推进后重读观测或观察画面来验证。ok:false 时记录原始 error、刷新观测后再决定。记录实际测到的动作、效果和页面错误。若看见结算，再记录胜负、撤离人数、结束原因和游戏内用时。没看见就写「未观察到结算」，并注明覆盖范围。</textarea>
 </main><script>
 const prompt=document.getElementById('prompt');
 const status=document.getElementById('status');
