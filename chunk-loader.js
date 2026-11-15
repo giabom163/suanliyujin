@@ -2,7 +2,7 @@
 (function() {
   const CHUNKS = {
     'index.wasm': { count: 3, totalSize: 39514754, label: '引擎核心', mime: 'application/wasm' },
-    'index.pck': { count: 3, totalSize: 41814704, label: '3D资源包', mime: 'application/octet-stream' }
+    'index.pck': { count: 10, totalSize: 41814704, label: '3D资源包', mime: 'application/octet-stream' }
   };
 
   const originalFetch = window.fetch;
@@ -132,7 +132,7 @@
       const tasks = [];
       for (let i = 0; i < info.count; i++) {
         const partIdx = i;
-        const partUrl = baseUrl + matchedKey + '.part' + partIdx + (matchedKey === 'index.pck' ? '?v=f5529ee2e52b5938' : '');
+        const partUrl = baseUrl + matchedKey + '.part' + partIdx + (matchedKey === 'index.pck' ? '?v=f5529ee2e52b5938-4m' : '');
         const partId = matchedKey + '#' + partIdx;
         tasks.push(() => fetchChunkWithRetry(partUrl, partId, info.label, 3));
       }
