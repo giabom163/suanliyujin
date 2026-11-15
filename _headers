@@ -1,0 +1,10 @@
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Access-Control-Allow-Origin: *
+
+/ai-interface
+  Cache-Control: no-store
+
+/ai-interface.html
+  Cache-Control: no-store
